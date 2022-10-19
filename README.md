@@ -2,6 +2,12 @@
 
 Combine dependabot pull requests into a single pull request for easier deploying.
 
+## Installation
+
+```
+gh extension install https://github.com/kmcq/gh-combine-dependabot-prs
+```
+
 ## Usage
 
 ```
