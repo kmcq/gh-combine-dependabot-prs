@@ -22,9 +22,7 @@ git checkout -b "$branch_name" origin/main
 
 for pr_number in "$@"; do
   head_sha=$(pr_sha $pr_number)
-  shas=$(git log "origin/main..${head_sha}" --format=format:%H --reverse)
-
-  git cherry-pick "$shas"
+  git rev-list --reverse "origin/main..${head_sha}" | git cherry-pick --stdin 
 done
 
 git push origin "$branch_name" --set-upstream
