@@ -13,16 +13,21 @@ pr_numbers_to_md () {
   done
 }
 
+default_branch () {
+  git remote show origin | grep 'HEAD branch' | awk '{ print $NF }'
+}
+
 current_date=`date +%Y-%m-%d`
 current_date_tight=`date +%Y%m%d`
 branch_name="dependabot-${current_date_tight}"
+default_branch=$(default_branch)
 
 git fetch
-git checkout -b "$branch_name" origin/main
+git checkout -b "$branch_name" "origin/$default_branch"
 
 for pr_number in "$@"; do
   head_sha=$(pr_sha $pr_number)
-  git rev-list --reverse "origin/main..${head_sha}" | git cherry-pick --stdin 
+  git rev-list --reverse "origin/${default_branch}..${head_sha}" | git cherry-pick --stdin  --allow-empty
 done
 
 git push origin "$branch_name" --set-upstream
